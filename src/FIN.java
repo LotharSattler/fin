@@ -1,5 +1,8 @@
 public class FIN {
 
+    private FIN() {
+    }
+
     public static boolean hasUpTo17Chars(String fin) {
         return fin.trim().length() <= 17;
     }
@@ -13,8 +16,10 @@ public class FIN {
     }
 
     public static void validateFin(String fin) {
-        if (!hasUpTo17Chars(fin)) throw new RuntimeException("FIN must not have more than 17 characters: " + fin);
-        if (!hasNoIllegalChars(convertUmlauts(fin))) throw new RuntimeException("Illegal characters in FIN: " + fin);
+        if (!hasUpTo17Chars(fin))
+            throw new IllegalArgumentException("FIN must not have more than 17 characters: " + fin);
+        if (!hasNoIllegalChars(convertUmlauts(fin)))
+            throw new IllegalArgumentException("Illegal characters in FIN: " + fin);
     }
 
     private static String transliterateFin(String fin) {
@@ -30,7 +35,7 @@ public class FIN {
     }
 
     private static char transliterateChar(char c) {
-        char t = c;
+        char t;
 
         switch (c) {
             case 'A':
@@ -82,13 +87,15 @@ public class FIN {
             case 'Ö':
                 t = '0';
                 break;
+            default:
+                t = c;
         }
 
         return t;
     }
 
     public static char calculateCheckSum(String fin) {
-        char checkSum = '\0';
+        char checkSum;
         String transliterated = transliterateFin(fin);
         int[] weights = {9, 8, 7, 6, 5, 4, 3, 2, 10, 9, 8, 7, 6, 5, 4, 3, 2};
         int sum = 0;
@@ -109,7 +116,7 @@ public class FIN {
     public static boolean validateCheckSum(String fin, String checkSum) {
 
         if (checkSum.trim().length() == 0 || checkSum.trim().length() > 1) {
-            throw new RuntimeException("check sum must not have more or less than 1 character: " + checkSum);
+            throw new IllegalArgumentException("check sum must not have more or less than 1 character: " + checkSum);
         }
 
         return checkSum.trim().charAt(0) == calculateCheckSum(fin);

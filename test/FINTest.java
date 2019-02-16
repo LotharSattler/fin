@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 public class FINTest {
 
+    private static final String TEST_FIN = "TMBBH25JOA3009215";
+
     @Test
     public void finHasNoChars() {
         assertTrue(FIN.hasUpTo17Chars(""));
@@ -29,6 +31,7 @@ public class FINTest {
         assertTrue(FIN.hasNoIllegalChars("ab345678901234567"));
     }
 
+
     @Test
     public void finHasIllegalChars() {
         assertFalse(FIN.hasNoIllegalChars("%b345678901234567"));
@@ -39,35 +42,35 @@ public class FINTest {
         assertEquals("AOU", FIN.convertUmlauts("ÄÖÜ"));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void finHas18CharsThrowsException() {
         FIN.validateFin("123456789012345678");
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void finHasIllegalCharsThrowsException() {
         FIN.validateFin("%2345678901234567");
     }
 
     @Test
     public void checkSumIsCalculated() {
-        assertEquals('7', FIN.calculateCheckSum("TMBBH25JOA3009215"));
+        assertEquals('7', FIN.calculateCheckSum(TEST_FIN));
     }
 
     @Test
     public void checkSumIsValidated() {
-        assertTrue(FIN.validateCheckSum("TMBBH25JOA3009215", "7"));
+        assertTrue(FIN.validateCheckSum(TEST_FIN, "7"));
         assertTrue(FIN.validateCheckSum("WVWZZZ1JZ3W386755", "X"));
-        assertFalse(FIN.validateCheckSum("TMBBH25JOA3009215", "8"));
+        assertFalse(FIN.validateCheckSum(TEST_FIN, "8"));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void checkSumIsEmptyThrowsException() {
-        FIN.validateCheckSum("TMBBH25JOA3009215", "");
+        FIN.validateCheckSum(TEST_FIN, "");
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void checkSumHasTwoCharsThrowsException() {
-        FIN.validateCheckSum("TMBBH25JOA3009215", "10");
+        FIN.validateCheckSum(TEST_FIN, "10");
     }
 }
